@@ -1,0 +1,119 @@
+CREATE DATABASE QLDIEM;
+USE QLDIEM;
+
+CREATE TABLE users (
+id INT AUTO_INCREMENT PRIMARY KEY,
+student_code VARCHAR(20) UNIQUE,
+pass VARCHAR(255) NOT NULL,
+full_name VARCHAR(100) NULL,
+email VARCHAR(100) NULL
+);
+-- Bảng DMKHOA
+CREATE TABLE DMKHOA (
+MAKHOA CHAR(2) NOT NULL,
+TENKHOA NVARCHAR(20) NOT NULL,
+PRIMARY KEY (MAKHOA)
+);
+-- Bảng DMMH
+CREATE TABLE DMMH (
+MAMH CHAR(2) NOT NULL,
+TENMH NVARCHAR(30) NOT NULL,
+SOTIET TINYINT NOT NULL,
+PRIMARY KEY (MAMH)
+);
+-- Bảng DMSV
+CREATE TABLE DMSV (
+MASV CHAR(3) NOT NULL,
+HOSV NVARCHAR(30) NOT NULL,
+TENSV NVARCHAR(10) NOT NULL,
+PHAI BOOLEAN NOT NULL,
+NGAYSINH DATETIME NOT NULL,
+NOISINH NVARCHAR(50) NOT NULL,
+MAKH CHAR(2) NOT NULL,
+HOCBONG FLOAT NOT NULL,
+PRIMARY KEY (MASV),
+FOREIGN KEY (MAKH) REFERENCES DMKHOA(MAKHOA)
+);
+-- Bảng KETQUA
+CREATE TABLE KETQUA (
+MASV CHAR(3) NOT NULL,
+MAMH CHAR(2) NOT NULL,
+LANTHI TINYINT NOT NULL,
+DIEM DECIMAL(4,2) DEFAULT 0,
+PRIMARY KEY (MASV, MAMH, LANTHI),
+FOREIGN KEY (MASV) REFERENCES DMSV(MASV),
+FOREIGN KEY (MAMH) REFERENCES DMMH(MAMH)
+);
+
+-- View SINHVIEN_MONHOC
+CREATE VIEW SINHVIEN_MONHOC AS
+SELECT DISTINCT KQ.MASV, MAMH
+FROM KETQUA KQ
+INNER JOIN DMSV SV ON SV.MASV = KQ.MASV
+WHERE PHAI = 0;
+-- View SINHVIEN_MONHOC_1
+CREATE VIEW SINHVIEN_MONHOC_1 AS
+SELECT DISTINCT MASV, MAMH FROM KETQUA;
+-- View SINHVIEN_MONHOC_2
+CREATE VIEW SINHVIEN_MONHOC_2 AS
+SELECT DISTINCT MASV, TENMH
+FROM DMMH MH
+INNER JOIN KETQUA KQ ON KQ.MAMH = MH.MAMH;
+-- Chèn dữ liệu vào bảng DMKHOA
+INSERT INTO DMKHOA (MAKHOA, TENKHOA) VALUES
+('AV', 'Anh Văn'),
+('TH', 'Tin học'),
+('TR', 'Triết học'),
+('VL', 'Vật lý');
+-- Chèn dữ liệu vào bảng DMMH
+INSERT INTO DMMH (MAMH, TENMH, SOTIET) VALUES
+('01', 'Cơ sở dữ liệu', 45),
+('02', 'Trí tuệ nhân tạo', 45),
+('03', 'Truyền tin', 45),
+('04', 'Đồ họa', 60),
+('05', 'Văn phạm', 60),
+('06', 'Kỹ thuật lập trình', 45);
+-- Chèn dữ liệu vào bảng DMSV
+INSERT INTO DMSV (MASV, HOSV, TENSV, PHAI, NGAYSINH, NOISINH, MAKH,
+HOCBONG) VALUES
+('A01', 'Phạm Trọng', 'Tội', 0, '2000-04-15', 'Khám Chí Hòa', 'TH', 1000000),
+('A02', 'Nguyễn Thị', 'Nở', 1, '1945-09-02', 'Kế bên Lò Gạch', 'AV', 2000000),
+('A03', 'Tôn Ngộ', 'Không', 0, '1992-06-12', 'Hà Nội', 'TH', 150000),
+('A04', 'Lê Thị', 'Mầu', 1, '1990-03-27', 'Chùa Bộc', 'VL', 800000),
+('B01', 'Trương Dzô', 'Kỵ', 0, '2000-12-01', 'Truyện Kim Dung', 'VL', 0),
+('B02', 'Cao Thị', 'Thấp', 1, '1993-03-22', 'TP. HCM', 'AV', 0),
+('B03', 'Lưu Diệc', 'Phi', 1, '1990-01-15', 'Kinh Bắc', 'TR', 0),
+('C01', 'Trần Chí', 'Phèo', 0, '1940-11-25', 'Làng Vũ Đại', 'TR', 2500000),
+('C02', 'Trư Bát', 'Giới', 0, '1945-02-14', 'Hà Nội', 'VL', 0),
+('C03', 'Hồ Thị Bể', 'Bơi', 0, '1900-07-27', 'Hà Nội', 'AV', 120000);
+-- Chèn dữ liệu vào bảng KETQUA
+INSERT INTO KETQUA (MASV, MAMH, LANTHI, DIEM) VALUES
+('A01', '01', 1, 4.00),
+('A01', '01', 2, 3.00),
+('A01', '01', 3, 9.00),
+
+('A01', '02', 1, 6.00),
+('A01', '03', 1, 5.00),
+('A02', '03', 1, 3.00),
+('A02', '03', 2, 7.00),
+('A03', '01', 1, 3.00),
+('A03', '01', 2, 4.00),
+('A03', '01', 3, 6.00),
+('A04', '01', 1, 4.00),
+('A04', '01', 2, 6.00),
+('B01', '01', 1, 6.00),
+('C01', '01', 1, 4.00),
+('C01', '01', 2, 2.00),
+('C01', '01', 3, 7.00),
+('C01', '03', 1, 4.00),
+('C01', '03', 2, 8.00),
+('C01', '04', 1, 6.50),
+('C01', '05', 1, 4.00),
+('C01', '05', 2, 3.00),
+('C01', '05', 3, 5.00),
+('C02', '01', 1, 3.00),
+('C02', '01', 2, 7.00),
+('C03', '01', 1, 4.00),
+('C03', '01', 2, 8.00);
+INSERT INTO users (student_code, pass, full_name, email) VALUES
+('admin', '123', 'Nguyễn Văn A', 'nva@example.com');

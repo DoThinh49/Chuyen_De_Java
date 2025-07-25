@@ -4,13 +4,14 @@ public class Student {
     private String maSV;
     private String hoSV;
     private String tenSV;
-    private boolean phai; // true: Nữ, false: Nam
+    private boolean phai;
     private String ngaySinh;
     private String noiSinh;
     private String maKH;
     private float hocBong;
 
-    public Student(String maSV, String hoSV, String tenSV, boolean phai, String ngaySinh, String noiSinh, String maKH, float hocBong) {
+    public Student(String maSV, String hoSV, String tenSV, boolean phai, String ngaySinh,
+                   String noiSinh, String maKH, float hocBong) {
         this.maSV = maSV;
         this.hoSV = hoSV;
         this.tenSV = tenSV;
@@ -21,7 +22,6 @@ public class Student {
         this.hocBong = hocBong;
     }
 
-    // Getters
     public String getMaSV() { return maSV; }
     public String getHoSV() { return hoSV; }
     public String getTenSV() { return tenSV; }
